@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Love Letter • For Shreeji</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#ffe4ec;
+      --bg2:#fff7fb;
+      --ink:#2a2a2a;
+      --accent:#ff5a8b;
+      --paper:#fffafc;
+      --shadow: 0 20px 50px rgba(0,0,0,.12);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; display:grid; place-items:center;
+      background: radial-gradient(1200px 800px at 70% 20%, var(--bg1), transparent),
+                  radial-gradient(1000px 700px at 20% 80%, var(--bg2), #ffffff);
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink);
+      transition: filter .35s ease;
+    }
+    body.sad{ filter: grayscale(60%) brightness(.96); }
+    .wrapper{ width:min(900px, 92vw); padding:24px; }
+    .envelope{ position:relative; background:var(--paper); border-radius:28px; padding:32px clamp(18px, 4vw, 48px); box-shadow:var(--shadow); overflow:hidden; border:1px solid #ffe2ee; isolation:isolate; }
+    .envelope:before{ content:""; position:absolute; inset:-40px -60px auto auto; width:280px; height:280px; border-radius:50%; background:conic-gradient(from 90deg, #ffd1e1, #fff0f5, #ffd8e6); filter:blur(30px); opacity:.5; z-index:-1; }
+    .shake{ animation:shake .6s ease both; }
+    @keyframes shake{ 10%,90%{transform:translateX(-1px)} 20%,80%{transform:translateX(2px)} 30%,50%,70%{transform:translateX(-4px)} 40%,60%{transform:translateX(4px)} }
+    h1{ margin:0 0 6px; font-size:clamp(36px, 7vw, 64px); font-family:'Great Vibes', cursive; color:var(--accent); text-align:center; line-height:1.05; }
+    .subtitle{ text-align:center; margin:0 0 22px; opacity:.7; font-weight:300; }
+    blockquote{ margin:16px auto 20px; padding:16px 18px; border-left:4px solid var(--accent); background: linear-gradient(180deg, #fff7fb, #ffffff); border-radius:12px; font-size:clamp(14px, 2.6vw, 18px); line-height:1.75; word-break:break-word; white-space:pre-wrap; }
+    .proposal{ margin: 18px 0 26px; text-align:center; font-size:clamp(18px, 4vw, 28px); font-weight:600; }
+    .signature{ text-align:center; font-family:'Great Vibes', cursive; font-size:clamp(28px, 6vw, 44px); color:var(--accent); margin: 0 0 18px; }
+    .actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap }
+    button{ appearance:none; border:none; cursor:pointer; font:inherit; padding:12px 20px; border-radius:999px; transition:.2s ease; box-shadow:0 8px 18px rgba(255,90,139,.25); }
+    .yes{ background:var(--accent); color:white; font-weight:700; }
+    .no{ background:white; color:var(--accent); border:2px solid var(--accent); font-weight:600; }
+    button:active{ transform: translateY(1px); }
+    .typed{ min-height:2.6em; text-align:center; margin-top:22px; font-size:clamp(22px, 5vw, 36px); font-weight:700; color:var(--accent); letter-spacing:.5px; white-space:pre-wrap; }
+    .hearts{ position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+    .heart{ position:absolute; font-size:14px; opacity:0; animation: floatUp 2.8s linear forwards; }
+    @keyframes floatUp{ 0%{ transform: translateY(20px) scale(.8); opacity:0 } 10%{ opacity:1 } 100%{ transform: translateY(-120vh) scale(1.6); opacity:0 } }
+    footer{ margin-top:22px; text-align:center; font-size:12px; opacity:.55 }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="envelope" id="card" role="dialog" aria-label="Love Letter">
+      <h1>My Love Letter</h1>
+      <p class="subtitle">sealed with ❤️ just for you</p>
+
+      <blockquote id="shayari">
+ Apki ankhe dekh Chand bhi kal jaye,
+ Har nazar mein jeise khuwab utar jaaye..
+ Zulfe aapki - raato ki narmi jeisi,
+ Chehra itna haseen ki dil bahek jaaye....
+ Aur woh muskuraye toh kasam se-
+ "Aap ke alawa sari duniya thahar jaaye"
+      </blockquote>
+
+      <p class="signature">Love you, Shreeji ✨</p>
+      <p class="proposal">Will you be mine?</p>
+
+      <div class="actions">
+        <button class="yes" id="yesBtn" aria-label="Yes">Yes 💖</button>
+        <button class="no" id="noBtn" aria-label="No">No 😶</button>
+      </div>
+
+      <div class="typed" id="typed"></div>
+      <footer>Made with a whole lot of feelings.</footer>
+    </div>
+  </div>
+
+  <div class="hearts" id="hearts"></div>
+
+  <script>
+    const typed = document.getElementById('typed');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+    const hearts = document.getElementById('hearts');
+    const card = document.getElementById('card');
+
+    function typeWriter(text, speed = 65){
+      typed.textContent = '';
+      let i = 0;
+      const itv = setInterval(()=>{
+        typed.textContent += text.charAt(i++);
+        if(i >= text.length) clearInterval(itv);
+      }, speed);
+    }
+
+    function popHearts(count = 24){
+      for(let i=0;i<count;i++){
+        const el = document.createElement('div');
+        el.className = 'heart';
+        el.textContent = ['❤','💖','💘','💗','💞'][Math.floor(Math.random()*5)];
+        el.style.left = Math.random()*100 + 'vw';
+        el.style.bottom = '-20px';
+        el.style.animationDelay = (Math.random()*0.6) + 's';
+        el.style.fontSize = (12 + Math.random()*26) + 'px';
+        hearts.appendChild(el);
+        setTimeout(()=> el.remove(), 3200);
+      }
+    }
+
+    function sadMoment(ms=900){
+      document.body.classList.add('sad');
+      card.classList.add('shake');
+      setTimeout(()=>{
+        document.body.classList.remove('sad');
+        card.classList.remove('shake');
+      }, ms);
+    }
+
+    yesBtn.addEventListener('click', ()=>{
+      typeWriter('Love you so much ❤️\nAlways be my Shreeji ✨');
+      popHearts(36);
+    });
+
+    noBtn.addEventListener('click', ()=>{
+      sadMoment();
+      const sure = confirm('🥺 Are you sure?');
+      if(sure){
+        typed.textContent = 'It\'s okay—your happiness matters 🙂';
+      } else {
+        typeWriter('Take your time… I\'ll wait 🫶');
+      }
+    });
+  </script>
+</body>
+</html>
